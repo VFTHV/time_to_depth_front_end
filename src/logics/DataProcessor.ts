@@ -45,7 +45,7 @@ export class DataProcessor {
         sameDepth.push(row);
       }
     });
-    console.log('Data length in DataProcessor', averages.length);
+    averages = averages.sort((rowA, rowB) => rowA[0] - rowB[0]);
     return averages;
   }
 }

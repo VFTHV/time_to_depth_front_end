@@ -1,4 +1,3 @@
-// import { Las } from '../../node_modules/las-js/dist/index';
 import { DataProcessor } from './DataProcessor';
 import { HeaderProcessor } from './HeaderProcessor';
 import { ReportGenerator } from './ReportGenerator';
@@ -8,7 +7,7 @@ export class LasFileReader {
   columnHeader: string[] = [];
   lasHeader: string = '';
 
-  constructor(public file: File) {}
+  constructor(public file: File, public fileName: string) {}
 
   async read(): Promise<void> {
     const fileReader = new FileReader();
@@ -25,7 +24,6 @@ export class LasFileReader {
 
         // curveHeader
         this.columnHeader = fullData.filter((row) => row.includes('~A')).flat();
-        console.log('Column header before data Processor', this.columnHeader);
 
         // extracting las data
         const columnHeaderIndex = fullData.findIndex((line) =>
@@ -37,7 +35,6 @@ export class LasFileReader {
 
         this.data = DataProcessor.timeToDepth(this.data, this.columnHeader);
 
-        console.log('Column header after data Processor', this.columnHeader);
         // extracting las header
 
         const end = fileReader.result.toString().lastIndexOf('~A');
@@ -48,7 +45,20 @@ export class LasFileReader {
           this.data
         );
 
-        ReportGenerator.report(this.data, this.columnHeader, this.lasHeader);
+        if (!this.fileName) {
+          const nameNoExtension = this.file.name.slice(
+            0,
+            this.file.name.lastIndexOf('.')
+          );
+          this.fileName = `${nameNoExtension}_processed`;
+        }
+
+        ReportGenerator.report(
+          this.data,
+          this.columnHeader,
+          this.lasHeader,
+          this.fileName
+        );
       }
     };
   }

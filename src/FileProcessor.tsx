@@ -3,7 +3,7 @@ import { LasFileReader } from './logics/LasFileReader';
 
 function FileProcessor() {
   const [inputFile, setInputFile] = useState<File | null>(null);
-  const [outputFile, setOutputFile] = useState('');
+  const [fileName, setFileName] = useState('');
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -16,7 +16,7 @@ function FileProcessor() {
     if (!inputFile) {
       alert('Please select a file');
     } else {
-      const reader = new LasFileReader(inputFile);
+      const reader = new LasFileReader(inputFile, fileName);
       reader.read();
     }
   };
@@ -29,11 +29,11 @@ function FileProcessor() {
       </label>
       <br />
       <label>
-        Output File:
+        Output File Name (not mandatory):
         <input
           type="text"
-          value={outputFile}
-          onChange={(e) => setOutputFile(e.target.value)}
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
         />
       </label>
       <br />
