@@ -4,6 +4,8 @@ import { LasFileReader } from './logics/LasFileReader';
 function FileProcessor() {
   const [inputFile, setInputFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState('');
+  const [step, setStep] = useState(0);
+  const [resampleDisabled, setResampleDisabled] = useState(true);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -16,7 +18,7 @@ function FileProcessor() {
     if (!inputFile) {
       alert('Please select a file');
     } else {
-      const reader = new LasFileReader(inputFile, fileName);
+      const reader = new LasFileReader(inputFile, fileName, step);
       reader.read();
     }
   };
@@ -25,7 +27,7 @@ function FileProcessor() {
     <form onSubmit={handleSubmit}>
       <label>
         Input File:
-        <input type="file" onChange={handleFileChange} />
+        <input type="file" onChange={handleFileChange} accept=".las" />
       </label>
       <br />
       <label>
@@ -34,6 +36,26 @@ function FileProcessor() {
           type="text"
           value={fileName}
           onChange={(e) => setFileName(e.target.value)}
+        />
+      </label>
+      <br />
+      <label>
+        Resample data between depth points?
+        <input
+          type="checkbox"
+          checked={resampleDisabled}
+          onChange={() => setResampleDisabled(!resampleDisabled)}
+        />
+      </label>
+      <br />
+      <label>
+        Set depth distance between samples to resample and interpolate the data
+        (not mandatory):
+        <input
+          type="number"
+          value={step}
+          onChange={(e) => setStep(parseFloat(e.target.value))}
+          disabled={!resampleDisabled}
         />
       </label>
       <br />

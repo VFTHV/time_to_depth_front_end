@@ -1,4 +1,5 @@
 import { DataProcessor } from './DataProcessor';
+import { ResampleData } from './ResampleData';
 import { HeaderProcessor } from './HeaderProcessor';
 import { ReportGenerator } from './ReportGenerator';
 
@@ -7,7 +8,11 @@ export class LasFileReader {
   columnHeader: string[] = [];
   lasHeader: string = '';
 
-  constructor(public file: File, public fileName: string) {}
+  constructor(
+    public file: File,
+    public fileName: string,
+    public step: number
+  ) {}
 
   async read(): Promise<void> {
     const fileReader = new FileReader();
@@ -34,6 +39,9 @@ export class LasFileReader {
           .map((row) => row.map((item) => parseFloat(item.toString())));
 
         this.data = DataProcessor.timeToDepth(this.data, this.columnHeader);
+
+        //resample the data
+        this.data = ResampleData.resample(this.data, this.step);
 
         // extracting las header
 
