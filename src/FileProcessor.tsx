@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LasFileReader } from './logics/LasFileReader';
+import './styles/FileProcessor.css';
 
 function FileProcessor() {
   const [inputFile, setInputFile] = useState<File | null>(null);
