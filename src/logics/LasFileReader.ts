@@ -41,7 +41,7 @@ export class LasFileReader {
         this.data = DataProcessor.timeToDepth(this.data, this.columnHeader);
 
         //resample the data
-        this.data = ResampleData.resample(this.data, this.step);
+        // this.data = ResampleData.resample(this.data, this.step);
 
         // extracting las header
 

@@ -6,6 +6,10 @@ export class DataProcessor {
     // trim data from non-zero speed, leaving only stations
     // replacing first column with ADPTH curve
 
+    if (depthIndex < 0) {
+      alert('Please make sure LAS file has ADPTH curve');
+    }
+
     columnHeader[1] = 'Depth';
 
     data = data
@@ -33,8 +37,14 @@ export class DataProcessor {
       } else {
         // create average for one depth
         const averAtSameDepth: number[] = sameDepth[0].map((_, i) => {
+          // cut 10% from each side of sameDepth array
+          const cutEdgesSameDepth = sameDepth.slice(
+            Math.floor(sameDepth.length * 0.1),
+            sameDepth.length - Math.floor(sameDepth.length * 0.1)
+          );
           const avNum: number =
-            sameDepth.reduce((acc, arr) => acc + arr[i], 0) / sameDepth.length;
+            cutEdgesSameDepth.reduce((acc, arr) => acc + arr[i], 0) /
+            cutEdgesSameDepth.length;
           return Number(avNum.toFixed(4));
         });
         if (sameDepth.length > 50) {
